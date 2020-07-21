@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Login</title>
+    <!-- Required meta tags -->
+    {{!-- we dont actually need these tags to be honest --}}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" crossorigin="anonymous"></script>
+    <script>
+      //why are you giving a script tag here?
+      // Inside head
+      // inside the hbs
+      let __submitForm = (ev, un, pwd)=>{        // [Prevent the page from reloadingage from reloading]
+        ev.preventDefault();
+        // Dont use shortcut, it wont work here
+        // We have to make this post request in server
+        $.post('/loginRequest', {
+          un:un,
+          pwd:pwd
+        }, data=>{
+          // When we get the response
+          // We have to make status and error objects
+          // If request completed, status is true, else false
+          if(data.status){
+            // We will return a json object with user info from the server
+            // Since localStorage dosent accept anything except strings
+            // We have to convert json object to string
+            // We do it using JSON.stringify()
+            window.localStorage.setItem('__ssa_community_credentials', JSON.stringify(data.userCredentials))
+            location.replace('/')
+          } else {
+            alert(data.error)
+          }
+        })
+      }
+    </script>
+    <style>
+      body{
+        display: flex;
+        align-items: center;
+        /*background-image: url('')*/
+        font-size: 40px;
+        
+      }
+    </style>
+  </head>
+  <body>
+      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    {{!-- --}}
+    <form onsubmit="__submitForm(event, $('#loginName').val(), $('#loginPassword').val())">
+
+      <h1 class = "h1">login form</h1>
+      {{!-- <input type = "text" name = "name-1" id='loginName' placeholder = "enter username here"> --}}
+      <div class="form-group">
+        <label for="loginName">Email</label>
+        <input type="email" class="form-control" name="loginName" id="loginName" aria-describedby="helpId" placeholder="Enter email">
+        <small id="helpId" class="form-text text-muted">Enter your registered email</small>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Password</label>
+        <input type="password" class="form-control" name="loginPassword" id="loginPassword" placeholder="Enter registered password">
+        <small class="text-muted">Enter your registered password</small>
+      </div>
+      <div class = "registered">
+        {{!-- Stick to the server syntax --}}
+          <a href = "/signup">dont have an account yet?</a>
+        </div>
+    </form>
+  </body>
+</html>
